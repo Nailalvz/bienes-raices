@@ -1,0 +1,94 @@
+.barra{
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    place-items: center;
+    padding-top: 3rem;
+
+    .logo-header{
+        max-width: 100%;
+        width: 25rem;
+        height: auto;
+    }
+
+    @include tablet{
+       display: grid;
+       grid-template-columns: 2fr 3fr 1fr;
+    }
+}
+
+.navegacion{
+
+    visibility: hidden;
+    opacity: 0;
+    height: 0;
+    transition: visibility .3s ease-in, opacity .3s linear;
+
+    @include tablet{
+        display: flex;
+        align-items: center;
+        opacity: 1;
+        visibility: visible;
+    }
+
+    a{
+        color: $blanco;
+        text-decoration: none;
+        font-size: 2.2rem;
+        display: block;
+        text-align: center;
+
+        @include tablet{
+            margin-right: 2rem;
+            font-size: 1.8rem;
+
+            &:last-of-type{
+                margin-right: 0;
+            }
+        }
+
+        &:hover{
+            color: $verde;
+        }
+    }
+
+}
+
+// Menú de hamburguesa
+.movil-menu{
+
+    @include tablet{
+        display: none;
+    }
+
+    img{
+        width: 3rem;
+    }
+
+}
+
+.dark-mode-contenedor{
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility .3s ease-in, opacity .3s linear;
+
+    .dark-mode-boton{
+        width: 2.6rem;
+        filter: invert(100%);
+
+        &:hover{
+            cursor: pointer;
+        }
+    }
+
+    @include tablet{
+        visibility: visible;
+        opacity: 1;
+    }
+
+}
+
+.mostrar{
+    visibility: visible;
+    opacity: 1;
+    height: auto;
+}

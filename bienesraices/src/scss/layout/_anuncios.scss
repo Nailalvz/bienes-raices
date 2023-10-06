@@ -1,0 +1,51 @@
+@include tablet{
+
+    .contenedor-anuncios{
+        @include grid(3, 2rem);
+    }
+}
+
+.anuncio{
+    // lighten para aclarar el color
+    background-color: lighten($gris, 5);
+    border: 1px solid darken($gris, 8);
+    margin-bottom: 2.5rem;
+
+    .contenido-anuncio{
+        padding: 2rem;
+    }
+
+    h3, p{
+        margin: 0;
+    }
+}
+
+.precio{
+    color: $verde;
+    font-weight: $bold;
+    font-size: 3rem;
+}
+
+.iconos-caracteristicas {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    max-width: 40rem;
+
+    li{
+        // Cada uno recibe un pixel de lo que hay disponible
+        flex: 1;
+        display: flex;
+
+        img{
+            // Base de 5rem para que sea más pequeño
+            flex: 0 0 3rem;
+            margin-right: 1rem;
+        }
+
+        p{
+            font-weight: $black;
+        }
+    }
+}
+
