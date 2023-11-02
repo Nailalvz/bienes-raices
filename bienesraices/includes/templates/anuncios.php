@@ -1,11 +1,5 @@
 <?php
 
-    // Importar la conexión
-    // Esta ruta es relativa al index.php que es el que manda llamar el archivo 
-    require 'includes/config/database.php';
-    // Esta es la ruta hacía el parcial
-    // require __DIR__ . '../config/database.php';
-
     $db = conectarDB();
 
     // Consultar

@@ -1,25 +1,24 @@
 <?php 
 
-    require '../../includes/funciones.php';
-    $auth = estaAutenticado();
-    if(!$auth){
-        header('Location: /');
-    }
-    // BASE DE DATOS
-    require '../../includes/config/database.php';
+    require '../../includes/app.php';
 
+    use App\Propiedad;
+
+    estaAutenticado();
+
+    // BASE DE DATOS
     $db = conectarDB();
 
     // Consultar para obtener los vendedores
     $consulta = "SELECT * FROM vendedores";
     $resultadoVendedores = mysqli_query($db, $consulta);
 
-    echo '<pre>';
-    var_dump($resultadoVendedores);
-    echo '</pre>';
+    // echo '<pre>';
+    // var_dump($resultadoVendedores);
+    // echo '</pre>';
 
     // Array con mensajes de errores
-    $errores = [];
+    $errores = Propiedad::getErrores();
 
     $titulo = '';
     $precio = '';
@@ -32,61 +31,23 @@
     // Ejecutar el código después de que el usuario envia el formulario
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
-        $titulo = mysqli_real_escape_string( $db, $_POST['titulo'] );
-        $precio = mysqli_real_escape_string( $db, $_POST['precio'] );
-        $descripcion = mysqli_real_escape_string( $db, $_POST['descripcion'] );
-        $habitaciones = mysqli_real_escape_string( $db, $_POST['habitaciones'] );
-        $wc = mysqli_real_escape_string( $db, $_POST['wc'] );
-        $estacionamiento = mysqli_real_escape_string( $db, $_POST['estacionamiento'] );
-        $vendedores_id = mysqli_real_escape_string( $db, $_POST['vendedor'] );
-        $creado = date('Y/m/d');
+        $propiedad = new Propiedad($_POST);
+        $errores = $propiedad->validar();
 
-        $imagen = $_FILES['imagen'];
-
-        if(!$titulo){
-            $errores[] = 'Debes añadir un titulo';
-        }
-
-        if(!$precio){
-            $errores[] = 'El precio es obligatorio';
-        }
-
-        if(!$imagen['name'] || $imagen['error']){
-            $errores[] = 'La imagen es obligatoria';
-        }
-
-        if( strlen($descripcion) < 50 ){
-            $errores[] = 'La descripción es obligatoria y debe tener al menos 50 caracteres';
-        }
-
-        if(!$habitaciones){
-            $errores[] = 'El número de habitaciones es obligatorio';
-        }
-
-        if(!$wc){
-            $errores[] = 'El número de baños es obligatorio';
-        }
-
-        if(!$estacionamiento){
-            $errores[] = 'El número de lugares de estacionamiento es obligatorio';
-        }
-
-        if(!$vendedores_id){
-            $errores[] = 'El vendedor es obligatorio';
-        }
-
-        // Validar por tamaño (1mb máximo)
-        $medida = 1000 * 1000;
-        if($imagen['size'] > $medida){
-            $errores[] = 'La imagen es muy grande';
-        }
-
-        // echo "<pre>";
-        // var_dump($errores);
-        // echo "</pre>";
 
         // Comprobar que el arreglo de errores esta vacío
         if(empty($errores)){
+
+            $propiedad->guardar();
+
+            // Asignar Files a una variable
+            $imagen = $_FILES['imagen'];
+    
+           
+    
+            // echo "<pre>";
+            // var_dump($errores);
+            // echo "</pre>";
 
             // SUBIDA DE ARCHIVOS
 
@@ -102,8 +63,7 @@
             // Subir la imagen
             move_uploaded_file($imagen["tmp_name"], "$carpetaImagenes" . $nombreImagen);
 
-            // Insertar en la base de datos
-            $query = "INSERT INTO propiedades (titulo, precio, imagen, descripcion, habitaciones, wc, estacionamiento, creado, vendedores_id ) VALUES ( '$titulo', $precio, '$nombreImagen', '$descripcion', $habitaciones, $wc, $estacionamiento, '$creado', $vendedores_id )";
+
 
             // echo $query;
 
@@ -163,7 +123,7 @@
             <fieldset>
                 <legend>Vendedor</legend>
 
-                <select name="vendedor">
+                <select name="vendedores_id">
                     <option value="">-- Seleccione --</option>
                     <?php while($vendedor = mysqli_fetch_assoc($resultadoVendedores) ): ?>
                         <!--Con esto validamos si el vendedor que viene de la base de datos es el mismo que eleigió el usuario después de validar lo seleccione-->

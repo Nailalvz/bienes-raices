@@ -1,5 +1,5 @@
 <?php 
-    require 'includes/funciones.php';
+    require 'includes/app.php';
     //$inicio Variable para que se muetre la imagen del header 
     incluirTemplate('header', $inicio = true);
 ?>
